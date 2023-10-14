@@ -168,6 +168,58 @@ public class SachFragment extends Fragment {
         });
 
         lstLS = (ArrayList<LoaiSach>) loaiSachDAO.getAll();
+        btn_increase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(lstSach, new Comparator<Sach>() {
+                    @Override
+                    public int compare(Sach o1, Sach o2) {
+                        return o1.getGiaThue() > o2.getGiaThue() ? 1:-1;
+                    }
+                });
+
+                adapter = new SachAdapter(getContext(), lstSach, new IClickItemRCV() {
+                    @Override
+                    public void iclickItem(RecyclerView.ViewHolder viewHolder, int position, int type) {
+                        getPosition = position;
+                        if (type == 0) {
+                            openDialog(getContext(),1);
+                        } else {
+                            xoa_sach(String.valueOf(position));
+                        }
+                    }
+                });
+                rcv_sach.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+                rcv_sach.setAdapter(adapter);
+
+                Toast.makeText(getContext(), "Đã sắp xếp tăng dần theo giá thuê !", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btn_reduce.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Collections.sort(lstSach, new Comparator<Sach>() {
+                    @Override
+                    public int compare(Sach o1, Sach o2) {
+                        return o1.getGiaThue() < o2.getGiaThue() ? 1:-1;
+                    }
+                });
+                adapter = new SachAdapter(getContext(), lstSach, new IClickItemRCV() {
+                    @Override
+                    public void iclickItem(RecyclerView.ViewHolder viewHolder, int position, int type) {
+                        getPosition = position;
+                        if (type == 0) {
+                            openDialog(getContext(),1);
+                        } else {
+                            xoa_sach(String.valueOf(position));
+                        }
+                    }
+                });
+                rcv_sach.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false));
+                rcv_sach.setAdapter(adapter);
+                Toast.makeText(getContext(), "Đã sắp xếp giảm dần theo giá thuê !", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         initUI(view);
         fillRCV();
